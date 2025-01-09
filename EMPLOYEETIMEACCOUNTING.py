@@ -363,3 +363,23 @@ else:
     currentAmountValue = format_string(currentAmount)
     log(f'Monthly new amount={currentAmountValue}')
     addOrUpdateAttribute(monthlyActivity, HoursWorked, currentAmountValue, False)
+
+
+# =====
+# Константа для определения порога часов
+OVERTIME_THRESHOLD = TimeSpan.FromHours(8)  # 8 часов
+
+def createOvertimeEntity(employeeEntityId):
+    """
+    Создает сущность OVERTIME и связывает её с сотрудником.
+    """
+    overtimeEntity = create(Overtime)  # Создаем новую сущность OVERTIME
+    addOrUpdateAttribute(overtimeEntity, 'isOverTime', 'TRUE', True)  # Устанавливаем атрибут isOverTime в TRUE
+    addEntityReference(overtimeEntity, OvertimeToEmployeeRef, employeeEntityId)  # Привязываем к сотруднику
+
+# Проверяем, превышает ли сумма дневной активности 8 часов
+if dailyActivity is not None:
+    currentAmount = TimeSpan.Parse(dailyActivity.attributes[HoursWorked].localizedValues[None].value)  # Получаем текущие часы работы
+    if currentAmount > OVERTIME_THRESHOLD:  # Если превышает порог
+        createOvertimeEntity(employeeEntityId)  # Создаем сущность OVERTIME
+        log(f'Overtime created for employee {employeeEntityId} due to exceeding 8 hours of work.')  # Логируем создание сущности OVERTIME
