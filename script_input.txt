@@ -1,0 +1,44 @@
+set_output_file ../script_output.txt
+
+create_organization "CoolTestCompany" "contact@cc.com" "Russia"
+
+create_user "duxevy" "Qwerty123" "Vladislav" "Pechenevsky" "Russia" "Russian"
+create_user "bob" "BobSecure123" "Bob" "Smith" "USA" "English"
+
+set_access_config "vladislav_access_cfg", "/api/v1", "http://paragon.paragonbox.com", "CoolTestCompany", "contact@cc.com", "admin@cc.com, "Qwerty123"
+set_access_config "bob_access_cfg", "/api/v1", "http://paragon.paragonbox.com", "CoolTestCompany", "contact@cc.com", "bob@cc.com, "Qwerty123"
+
+use_access_config "vladislav_access_cfg"
+
+create_business_user "Igor" "CoolTestCompany" "Marketing" "Manager"
+
+create_attribute "priority"
+set_attribute_type "priority" "String"
+set_attribute_fixed_values "High", "Medium", "Low"
+save_attribute
+
+create_attribute "status"
+set_attribute_type "status" "String"
+set_attribute_fixed_values "Open", "In Progress", "Completed"
+save_attribute
+
+create_entity_type "Project"
+add_attribute "priority" IsMandatory
+add_attribute "status" IsMandatory
+save_entity_type
+
+create_entity "Project"
+set_entity_attribute_value "priority" "High"
+set_entity_attribute_value "status" "Open"
+save_entity Published
+
+create_entity "Project"
+set_entity_attribute_value "priority" "Medium"
+set_entity_attribute_value "status" "In Progress"
+save_entity Published
+
+show_entities "Project"
+
+use_access_config "bob_access_cfg"
+login "bob" "BobSecure123"
+show_entities "Project"
