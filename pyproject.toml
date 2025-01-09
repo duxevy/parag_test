@@ -6,6 +6,9 @@ authors = ["duxevy <79513394+duxevy@users.noreply.github.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+colorama = "^0.4.6"
+requests = "^2.32.3"
+getpass-asterisk = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 
